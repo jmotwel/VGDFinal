@@ -1,111 +1,12 @@
 <!DOCTYPE html>
- <html>
- <head>
-     <title>Hello Web - Processing.js Test</title>
- </head>
- <body>
- <script src="processing.js"></script>
- <script type="text/processing" data-processing-target="processing-canvas">
-        void setup() {
-        size(400, 400);
-        background(100);
-        stroke(255);
-        ellipse(50, 50, 25, 25);
-        //println('hello web!');
-        };
-        
-var logoObj = function(x, y, s) { //logo object with x coordinate y coordinate and speed
-    this.x = x;
-    this.y = y;
-    this.speed = s;
-};
-
-var modifier = 1; //whether to go left or right
-
-var logo = []; //array to store logo object
-logo.push(new logoObj(120,150,1)); //adding new object to logo array
-
-logoObj.prototype.display = function(part) { //display function
-    fill(0, 255 , 255);
-    if(part === 0){ //display one part of logo
-        quad(this.x,this.y+25,this.x+25,this.y,this.x+25,this.y+100,this.x,this.y+100);
-    }
-    else if(part === 1){ //display two parts of logo
-        quad(this.x,this.y+25,this.x+25,this.y,this.x+25,this.y+100,this.x,this.y+100);
-        quad(this.x+25,this.y+100,this.x,this.y+125,this.x-25,this.y+125,this.x-50,this.y+100             );
-    }
-    else if(part === 2){//display 3 parts of logo
-        quad(this.x,this.y+25,this.x+25,this.y,this.x+25,this.y+100,this.x,this.y+100);
-        quad(this.x+25,this.y+100,this.x,this.y+125,this.x-25,this.y+125,this.x-50,this.y+100             );
-        quad(this.x-25,this.y+125,this.x-50,this.y+100,this.x-50,this.y+75,this.x-25,this.y              +100);
-    }
-    else if(part === 3){ //display 4 parts of logo
-        quad(this.x,this.y+25,this.x+25,this.y,this.x+25,this.y+100,this.x,this.y+100);
-        quad(this.x+25,this.y+100,this.x,this.y+125,this.x-25,this.y+125,this.x-50,this.y+100             );
-        quad(this.x-25,this.y+125,this.x-50,this.y+100,this.x-50,this.y+75,this.x-25,this.y              +100);
-        quad(this.x,this.y+25,this.x+25,this.y,this.x+100,this.y,this.x+125,this.y+25);
-    }
-    else if(part===4){ //display 5 parts of logo
-        quad(this.x,this.y+25,this.x+25,this.y,this.x+25,this.y+100,this.x,this.y+100);
-        quad(this.x+25,this.y+100,this.x,this.y+125,this.x-25,this.y+125,this.x-50,this.y+100             );
-        quad(this.x-25,this.y+125,this.x-50,this.y+100,this.x-50,this.y+75,this.x-25,this.y              +100);
-        quad(this.x,this.y+25,this.x+25,this.y,this.x+100,this.y,this.x+125,this.y+25);
-        quad(this.x+100,this.y,this.x+125,this.y+25,this.x+125,this.y+100,this.x+100,this.y              +125);
-    }
-    else{ //display 6 parts of logo
-        quad(this.x,this.y+25,this.x+25,this.y,this.x+25,this.y+100,this.x,this.y+100);
-        quad(this.x+25,this.y+100,this.x,this.y+125,this.x-25,this.y+125,this.x-50,this.y+100             );
-        quad(this.x-25,this.y+125,this.x-50,this.y+100,this.x-50,this.y+75,this.x-25,this.y              +100);
-        quad(this.x,this.y+25,this.x+25,this.y,this.x+100,this.y,this.x+125,this.y+25);
-        quad(this.x+100,this.y,this.x+125,this.y+25,this.x+125,this.y+100,this.x+100,this.y              +125);
-        quad(this.x+125,this.y+100,this.x+100,this.y+125,this.x+55,this.y+125,this.x+35,this             .y+100);
-    }
-    };
-    
-    logoObj.prototype.move = function() {
-        if(this.x > 300){
-           modifier=-1; //move left
-        }
-        else if(this.x< 30){
-            modifier=1; //move right
-        }
-        this.x += (this.speed*modifier); //alter x coordinate
-        
-    };
-    
-    draw = function() { 
-        background(220, 243, 245);
-        logo[0].move();           // update objects in the game
-        
-        // draw objects in the game
-        if(millis()<2000){ //2 seconds have passed
-            logo[0].display(0);   
-        }
-        else if(millis()<4000){ //4 seconds have passed
-            logo[0].display(1);
-        }
-        else if(millis()<6000){ //6 seconds have passed
-            logo[0].display(2);
-        }
-        else if(millis()<8000){ //8 seconds have passed
-            logo[0].display(3);
-        }
-        else if(millis()<10000){ //10 seconds have passed
-            logo[0].display(4);
-        }
-        else if(millis()<12000){ //12 seconds have passed
-            logo[0].display(5);
-        }
-        else{                    //default display
-            logo[0].display(10);
-        }
-    };
-
-
-
-        
-
-</script>
-<canvas id="processing-canvas"> </canvas>
+<html>
+<head>
+    <title>Hello Web - Processing.js Test</title>
+</head>
+<body>
+    <script src="processing.js"></script>
+    <h1>Processing.js Test</h1>
+    <p>This is my first Processing.js web-based sketch:</p>
+    <canvas data-processing-sources="game.pde"></canvas>
 </body>
 </html>
