@@ -1,4 +1,4 @@
-
+/* @pjs preload="tileset.png"; */
 PImage[] fragment;
 PImage m;
 int n=10;
@@ -64,8 +64,8 @@ void setup(){
 
 void drawMap(){
 
-    for (var i = 0; i < ground.length; i++) {
-        for (var j = 0; j < ground[i].length; j++) {
+    for (var i = 0; i < 13; i++) {
+        for (var j = 0; j < 13; j++) {
             m.drawTile(ground[i][j],j*32,i*32);
             m.drawTile(tMap[i][j],j*32,i*32);
         }
