@@ -3,27 +3,29 @@
 class cameraObj{
     var xOff;
     var yOff;
-
-    cameraObj(){
+    var mHeight, mWidth;
+    cameraObj(mapHeight,mapWidth){
         xOff=0;
         yOff=0;
+        mHeight = mapHeight;
+        mWidth = mapWidth;
     }
 
     boolean isInCam(target){
-        return (target.x>=-this.xOffset-50 && target.x<=-this.xOffset+400&&target.y+50>=-this.yOffset && target.y<=-this.yOffset+400);
+        return (target.m_xpos>=-this.xOff-50 && target.m_xpos<=-this.xOff+400&&target.m_ypos+50>=-this.yOff && target.m_ypos<=-this.yOff+400);
     }
 
     void update(target){
-        var x=-target.x + 200;
-        var y=-target.y + 200;
+        var x=-target.m_xpos + 200;
+        var y=-target.m_ypos + 200;
         x = min(0,x);
         y = min(0,y);
-        x = max(-mapWidth,x);
-        y = max(-mapHeight,y);
-        this.xOffset = x;
-        this.yOffset = y;
-        //println(this.xOffset+" "+this.yOffset);
-        translate(this.xOffset,this.yOffset);
+        
+        x = max(-mWidth+400,x);
+        y = max(-mHeight+400,y);
+        xOff = x;
+        yOff = y;
+        translate(xOff,yOff);
     }
     
 }

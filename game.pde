@@ -1,11 +1,13 @@
-/* @pjs preload="tileset.png"; */
+/* @pjs preload="tileset.png, character.png"; */
 PImage[] fragment;
-PImage m;
+var m=new tilemap();
+var p;
 int n=10;
 var mapHeight;
 var mapWidth;
 var cam;
-var p;
+var pg;
+
 var barMap=[[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
             [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
             [0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
@@ -48,43 +50,33 @@ var ground =[ [563,563,563,563,563,563,563,563,563,563,563,563,563,563,563,563,5
             [563,563,563,563,563,563,563,563,563,563,563,563,563,563,563,563,563,563,563,563,563,563,563],
             [563,563,563,563,563,563,563,563,563,563,563,563,563,563,563,563,563,563,563,563,563,563,563]
             ];
+mapHeight = ground.length*32;
+mapWidth = ground[0].length*32;
+cam = new cameraObj(mapHeight,mapWidth);
 
-void setup(){
-    size(400,400);
-    fragment=new PImage[n];
-    for(int i=0;i<fragment.length;i++){
-        fragment[i]=loadImage("./pokemon/" + str(i+1) + ".png");
-    }
-    m=new tilemap();
-    mapHeight = ground.length;
-    mapWidth = ground[0].length;
-    cam = new cameraObj();
-    p = new player(100,100);
-};
-
-void drawMap(){
-
-    for (var i = 0; i < 13; i++) {
-        for (var j = 0; j < 13; j++) {
-            m.drawTile(ground[i][j],j*32,i*32);
-            m.drawTile(tMap[i][j],j*32,i*32);
-        }
-
-    }
-};
 
 var keys=[];
 void keyPressed(){keys[keyCode] = true; };
 void keyReleased() { keys[keyCode] = false; };
 
+void setup(){
+    size(400, 400,P2D);
+    pg = createGraphics(mapWidth, mapHeight,P2D);
+    m.initMap(pg,tMap,ground);
+    p=new player(200,200);
+}
+
 void draw(){
     background(100);
     stroke(255);
-    drawMap();
+    pushMatrix();
+    cam.update(p);
+    image(pg,0,0);
+    
     p.display();
     if (keys[68]) {//right
         p.isMoving=1;
-        p.m_dir=0;
+        p.m_dir=2;
         
     }
     else if (keys[65]) {//left
@@ -93,16 +85,18 @@ void draw(){
     }
     else if (keys[87]) {//up
         p.isMoving=1;
-        p.m_dir=2;
+        p.m_dir=3;
        
     }
     else if (keys[83]) {//down
         p.isMoving=1;
-        p.m_dir=3;
+        p.m_dir=0;
     }
     else{
         p.isMoving=0;
+        state=1;
+        prevState=0;
     }
-
+    popMatrix();
 };
 
