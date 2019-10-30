@@ -19,10 +19,11 @@ class tilemap{
 
 
 
-    var initMap(pg,tmap,ground){
+    var initMap(pg,tmap,ground,mapWidth,mapHeight){
         pg.beginDraw();
-        for (var i = 0; i < ground.length; i++) {
-            for (var j = 0; j < ground[0].length; j++) {
+        for (var i = 0; i < tmap.length; i++) {
+            for (var j = 0; j <tmap[0].length; j++) {
+                
                 pg.image(drawTile(ground[i][j],32,32),j*32,i*32);
                 pg.image(drawTile(tmap[i][j],32,32),j*32,i*32);
             }
