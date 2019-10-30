@@ -1,4 +1,4 @@
-/* @pjs preload="tileset.png, character.png"; */
+/* @pjs preload="tileset.png, character2.png"; */
 PImage[] fragment;
 var m=new tilemap();
 var p;
