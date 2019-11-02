@@ -3,10 +3,9 @@ Authors James Otwell and Jason Wojcik
 For our final project, our team used multiple files as well as several images.
 These files and images must be included in order for the game to run.
 
-We have emailed the files to both the TA and Professor Hsiao.
-They are also included here: https://github.com/jmotwel/VGDFinal
+The necessary files are also included here: https://github.com/jmotwel/VGDFinal
 
-The files sent to the TA and professor are hosted on an Azure Cloud VM. To run 
+The files are hosted on an Azure Cloud VM. To run 
 the game enter http://40.71.169.155/" in the browser using Microsoft Edge or Firefox 
 (chrome does not consistently work).
 This will display game, showing the starting animation and screen.
