@@ -1,6 +1,10 @@
 This file is to give credit to all artists that helped in the creation of the public tilesets and images used for this project.
 Permission to use all public resources was given on the premise that credit was given to the artists. Below is credits for all resources used.
 
+Pokemon Sprite Archive:
+Veekun
+link:https://veekun.com/dex/downloads
+
 Pokemon Tileset (tileset.png):
 Link: https://www.deviantart.com/chaoticcherrycake/journal/Credits-for-Tiles-367931482
 
