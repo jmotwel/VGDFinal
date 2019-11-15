@@ -200,7 +200,15 @@ var pokeArr=[];
 
 var keys=[];
 void keyPressed(){keys[keyCode] = true; };
-void keyReleased() { keys[keyCode] = false; };
+void keyReleased() { 
+    keys[keyCode] = false; 
+    if(keyCode===82&&!p.runState){
+        p.runState=true;
+    }
+    else if(keyCode===82&&p.runState){
+        p.runState=false;
+    }
+};
 void mousePressed(){ isMousePressed=true;};
 void mouseReleased(){ isMousePressed=false;};
 
@@ -260,7 +268,6 @@ buttons[0].selected=1;
 
 
 void draw(){
-    
     switch(gameState){
     case 0: // Gameboy zoom and fade
         if (keys[32]){ // Space
