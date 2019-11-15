@@ -19,13 +19,22 @@ class tilemap{
 
 
 
-    var initMap(pg,tmap,ground,mapWidth,mapHeight){
+    var initMap(pg,tmap,ground,ground2,ground3,mapWidth,mapHeight){
         pg.beginDraw();
         for (var i = 0; i < tmap.length; i++) {
             for (var j = 0; j <tmap[0].length; j++) {
-                
-                pg.image(drawTile(ground[i][j],32,32),j*32,i*32);
-                pg.image(drawTile(tmap[i][j],32,32),j*32,i*32);
+                if(ground[i][j]!==-1){
+                    pg.image(drawTile(ground[i][j],32,32),j*32,i*32);
+                }
+                if(ground2[i][j]!==-1){
+                    pg.image(drawTile(ground2[i][j],32,32),j*32,i*32);
+                }
+                if(ground3[i][j]!==-1){
+                    pg.image(drawTile(ground3[i][j],32,32),j*32,i*32);
+                }
+                if(tMap[i][j]!==-1){
+                    pg.image(drawTile(tMap[i][j],32,32),j*32,i*32);
+                }
             }
         }
         pg.endDraw();
