@@ -392,21 +392,26 @@ void draw(){
         var py = round(p.m_ypos/tileSize);
         var px = round(p.m_xpos/tileSize);
         if (keys[68]&&!p.isMoving) {//right
+            p.notMoving=false;
             checkCollision(2);
             
         }
         else if (keys[65]&&!p.isMoving) {//left
+            p.notMoving=false;
             checkCollision(1);
         }
         else if (keys[87]&&!p.isMoving) {//up
+            p.notMoving=false;
             checkCollision(3)
         
         }
         else if (keys[83]&&!p.isMoving) {//down
+            p.notMoving=false;
             checkCollision(0);
 
         }
         else{
+            p.notMoving=true;
             if(!p.isMoving){
                 state=1;
                 prevState=0;

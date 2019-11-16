@@ -7,6 +7,8 @@ class player{
     var canMove;
     var runState;
     var m_speed;
+    var curFrame;
+    var notMoving;
     player(xpos,ypos){
         cset=loadImage("character.png");
         m_xpos = xpos;
@@ -15,6 +17,8 @@ class player{
         isMoving=false;
         canMove=true;
         runState=false;
+        notMoving=true;
+        curFrame
         state=1;
         prevState=0;
         pDown={drawSprite(0,0,32,32),drawSprite(0,1,32,32),drawSprite(0,2,32,32)};
@@ -71,6 +75,12 @@ class player{
                 m_ypos+=push;
             }
             m_total=0;
+            if(curFrame===0){
+                curFrame=1;
+            }
+            else{
+                curFrame=0;
+            }
         }
         animate();
     }
@@ -79,7 +89,122 @@ class player{
         isMoving=true;
     }
     void animate(){
-        
+        var fcol,frow=0;
+        if(m_total<tileSize/2){
+            if(runState){
+                if(m_dir===0){
+                    fcol=4;
+                    frow=0;
+                }
+                else if(m_dir===1){
+                    fcol=4;
+                    frow=1;
+                }
+                else if(m_dir===2){
+                    fcol=4;
+                    frow=2;
+                }
+                else if(m_dir===3){
+                    fcol=4;
+                    frow=3;
+                }
+            }
+            else if(runState===false){
+                if(m_dir===0){
+                    fcol=1;
+                    frow=0;
+                }
+                else if(m_dir===1){
+                    fcol=1;
+                    frow=1;
+                }
+                else if(m_dir===2){
+                    fcol=1;
+                    frow=2;
+                }
+                else if(m_dir===3){
+                    fcol=1;
+                    frow=3;
+                }
+            }
+        }
+
+        if(m_total>=tileSize/2){
+            if(curFrame===0&&runState){
+                if(m_dir===0){
+                    fcol=3;
+                    frow=0;
+                }
+                else if(m_dir===1){
+                    fcol=3;
+                    frow=1;
+                }
+                else if(m_dir===2){
+                    fcol=3;
+                    frow=2;
+                }
+                else if(m_dir===3){
+                    fcol=3;
+                    frow=3;
+                }
+            }
+            else if(curFrame===0&&runState===false){
+                if(m_dir===0){
+                    fcol=0;
+                    frow=0;
+                }
+                else if(m_dir===1){
+                    fcol=0;
+                    frow=1;
+                }
+                else if(m_dir===2){
+                    fcol=0;
+                    frow=2;
+                }
+                else if(m_dir===3){
+                    fcol=0;
+                    frow=3;
+                }
+            }
+            else if(curFrame===1&&runState){
+                if(m_dir===0){
+                    fcol=5;
+                    frow=0;
+                }
+                else if(m_dir===1){
+                    fcol=5;
+                    frow=1;
+                }
+                else if(m_dir===2){
+                    fcol=5;
+                    frow=2;
+                }
+                else if(m_dir===3){
+                    fcol=5;
+                    frow=3;
+                }
+            }
+            else if(curFrame===1&&runState===false){
+                if(m_dir===0){
+                    fcol=2;
+                    frow=0;
+                }
+                else if(m_dir===1){
+                    fcol=2;
+                    frow=1;
+                }
+                else if(m_dir===2){
+                    fcol=2;
+                    frow=2;
+                }
+                else if(m_dir===3){
+                    fcol=2;
+                    frow=3;
+                }
+            }
+        }
+        sprite = drawSprite(frow,fcol,32,32);
+        image(sprite,m_xpos,m_ypos);
     }
 
     PImage drawSprite(tileRow,tileCol,iWidth,iHeight){
