@@ -344,6 +344,7 @@ void draw(){
         }
         if(menuState===0){
             image(pg,-100,-100);    // Move trees out of frame
+            fill(255);
             textSize(40);
             text("Pokemon",110,50);
             textSize(20);
@@ -376,6 +377,7 @@ void draw(){
             textSize(15);
             text("Use the mouse to select buttons in menu",30,90);
             text("Use WSAD to move the player",30,110);
+            text("Press F to toggle run mode",30,130);
             buttons[buttons.length-1].display();
             buttons[buttons.length-1].update();
         }
@@ -392,26 +394,21 @@ void draw(){
         var py = round(p.m_ypos/tileSize);
         var px = round(p.m_xpos/tileSize);
         if (keys[68]&&!p.isMoving) {//right
-            p.notMoving=false;
             checkCollision(2);
             
         }
         else if (keys[65]&&!p.isMoving) {//left
-            p.notMoving=false;
             checkCollision(1);
         }
         else if (keys[87]&&!p.isMoving) {//up
-            p.notMoving=false;
             checkCollision(3)
         
         }
         else if (keys[83]&&!p.isMoving) {//down
-            p.notMoving=false;
             checkCollision(0);
 
         }
         else{
-            p.notMoving=true;
             if(!p.isMoving){
                 state=1;
                 prevState=0;

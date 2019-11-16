@@ -9,6 +9,7 @@ class player{
     var m_speed;
     var curFrame;
     var notMoving;
+    var frow,fcol;
     player(xpos,ypos){
         cset=loadImage("character.png");
         m_xpos = xpos;
@@ -21,14 +22,7 @@ class player{
         curFrame
         state=1;
         prevState=0;
-        pDown={drawSprite(0,0,32,32),drawSprite(0,1,32,32),drawSprite(0,2,32,32)};
-        rDown={drawSprite(0,3,32,32),drawSprite(0,4,32,32),drawSprite(0,5,32,32)}
-        pLeft={drawSprite(1,0,32,32),drawSprite(1,1,32,32),drawSprite(1,2,32,32)};
-        rLeft={drawSprite(1,3,32,32),drawSprite(1,4,32,32),drawSprite(1,5,32,32)};
-        pRight={drawSprite(2,0,32,32),drawSprite(2,1,32,32),drawSprite(2,2,32,32)};
-        rRight={drawSprite(2,3,32,32),drawSprite(2,4,32,32),drawSprite(2,5,32,32)};
-        pUp={drawSprite(3,0,32,32),drawSprite(3,1,32,32),drawSprite(3,2,32,32)};
-        rUp={drawSprite(3,3,32,32),drawSprite(3,4,32,32),drawSprite(3,5,32,32)};
+
     }
     void display(){
         //fill(255);
@@ -89,7 +83,6 @@ class player{
         isMoving=true;
     }
     void animate(){
-        var fcol,frow=0;
         if(m_total<tileSize/2){
             if(runState){
                 if(m_dir===0){
