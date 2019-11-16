@@ -1,5 +1,27 @@
 Authors James Otwell and Jason Wojcik
 
+- Game Description
+	Our game is a replica of one of our favorite games while growing up; Pokemon.
+	Many of us can remember growing up and playing Pokemon on our gameboys and we
+	wanted to recreate that experience.  Our game will include several original
+	characters, battles, and an open world experience.
+
+- Documentation
+camera.pde: Contains the logic for the camera that follows the player.  This 
+			logic stops the camera when the player is near a wall and
+			follows the player when he is moving.
+
+game.pde: Contains the logic for the game as well as the starting screen and animations.
+		  The majority of the code for our game will be written in this file.
+
+player.pde: Contains the logic for character movement, animation and display.
+			This file will hold all of the logic for the player.
+
+tilemap.pde: This file contains the logic for the background tilemap.  It 
+			 builds up the background tilemap then exports it as an image 
+			 so that rendering is faster.
+
+- Instructions
 For our final project, our team used multiple files as well as several images.
 These files and images must be included in order for the game to run.
 
@@ -16,7 +38,7 @@ These files are "camera.pde", "game.pde", "player.pde", "tilemap.pde", and "view
 Any permissions and credits given for the images and artistic work are inside the atistic credits
 text file.
 
-Game Controls:
+- Game Controls
 Currently we only have the game menu and scrolling tilemap implemented. Use the mouse to click
 on buttons in the screen. Press the start game button to start the game and the instructions
 button to view the instructions. Make sure the game is focused on by clicking on the 400x400
