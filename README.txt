@@ -21,5 +21,6 @@ Currently we only have the game menu and scrolling tilemap implemented. Use the 
 on buttons in the screen. Press the start game button to start the game and the instructions
 button to view the instructions. Make sure the game is focused on by clicking on the 400x400
 canvas if the controls arent working. Use WSAD to move the player once the game has started.
+Press "r" to toggle the run state of the player and move faster.
 
 Please email either jmwojcik@vt.edu or jmotwel@vt.edu with any questions.
