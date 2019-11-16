@@ -9,7 +9,8 @@ Authors James Otwell and Jason Wojcik
 - Documentation
 camera.pde: Contains the logic for the camera that follows the player.  This 
 			logic stops the camera when the player is near a wall and
-			follows the player when he is moving.
+			follows the player when he is moving. The player is always in the 
+			center of the screen unless near the edge of the map.
 
 game.pde: Contains the logic for the game as well as the starting screen and animations.
 		  The majority of the code for our game will be written in this file.
@@ -20,6 +21,17 @@ player.pde: Contains the logic for character movement, animation and display.
 tilemap.pde: This file contains the logic for the background tilemap.  It 
 			 builds up the background tilemap then exports it as an image 
 			 so that rendering is faster.
+
+index.html: default html file displayed when the ip address of the ip of the VM
+			is entered in the browser. Runs the processing code to display game
+
+tile.html: runs javascript to display and number the tiles used in the game.
+			Helper file to see which number a tile is to be entered in tilemap 
+			arrays.
+
+Artistic Credits.txt: file that gives credit to authors of the images used for the game
+
+All other files are image resources to be used in the game
 
 - Instructions
 For our final project, our team used multiple files as well as several images.
