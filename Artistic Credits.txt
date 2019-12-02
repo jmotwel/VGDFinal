@@ -5,6 +5,12 @@ Pokemon Sprite Archive:
 Veekun
 link:https://veekun.com/dex/downloads
 
+pokedex.json
+link:
+https://github.com/fanzeyi/pokemon.json
+This information was compiled by a number of contributors but all data was pulled from:
+https://bulbapedia.bulbagarden.net/wiki/Main_Page
+
 Pokemon Tileset (tileset.png):
 Link: https://www.deviantart.com/chaoticcherrycake/journal/Credits-for-Tiles-367931482
 
