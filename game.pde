@@ -11,10 +11,16 @@ var mapWidth;
 var tileSize=32;
 var cam;
 var pg;
+var highScore = 0;
 
 // For fight menu
 var fightMenu = 0;
 var selected = 0;
+
+// End screen animation
+var pokeIndex = 0;
+var totalScore = 0;
+var scoreText = 0;
 
 // Start animation variables
 var gb = loadImage("gameboy.png");
@@ -310,7 +316,7 @@ var pokedex = (function() {
 
 var pokemon = [new monster(1,40,40,1)];
 
-// gameState = 3;
+gameState = 4;
 void draw(){
     switch(gameState){
     case 0: // Gameboy zoom and fade
@@ -574,6 +580,7 @@ void draw(){
                     if(selected){
                         gameState = 2;
                         selected = 0;
+                        counter = 0;
                     }
                 }
             }
@@ -581,6 +588,104 @@ void draw(){
 
         popMatrix();
         counter+=2;      // Increment frame counter
+        break;
+    case 4:
+        pushMatrix();
+        background(217, 214, 210);
+
+        if(counter <= 160){
+            image(throw1, 10, 300, 100, 100);
+        }
+        else if(counter <= 180){
+            image(throw2, 10, 300, 100, 100);
+        }
+        else if(counter <= 200){
+            image(throw3, 10, 300, 100, 100);
+        }
+        else if(counter <= 220){
+            image(ball, 160+counter-366, 215-counter+366, 20, 20);
+            image(throw4, 10, 300, 100, 100);
+        }
+        else if(counter <= 400){
+            image(ball, 160+counter-366, 215-counter+366, 20, 20);
+            image(throw5, 10, 300, 100, 100);
+        }
+        else if(counter<=1000){
+            image(throw1, 10, 300, 100, 100);
+            pokemon[pokeIndex].m_xpos = 150;
+            pokemon[pokeIndex].m_ypos = 150;
+            pokemon[pokeIndex].display();
+
+            // Draw text box
+            if(pokeIndex === 0){
+                totalScore = pokemon[pokeIndex].calcScore();
+            }
+
+            fill(255,255,255);
+            stroke(0,0,0);
+            rect(150, 300, 248, 99);
+            rect(152, 302, 244, 95);
+            fill(0,0,0);
+            textSize(26);
+            text(pokemon[pokeIndex].myName, 155, 335);
+            textSize(18);
+            text("Catch Rate: " + pokemon[pokeIndex].myCRate, 155, 355);
+            text("Score: " + pokemon[pokeIndex].calcScore(), 155, 375);
+            scoreText = totalScore;
+        }
+        else{
+            if(pokeIndex < 6){
+                if(pokeIndex < 5){counter = 0;}
+                pokeIndex++;
+                totalScore += pokemon[pokeIndex].calcScore();
+            }
+            else{
+               image(throw1, 10, 300, 100, 100); 
+               if(totalScore >= highScore){
+                    highScore = totalScore;
+                    textSize(30);
+                    fill(255,0,0);
+                    text("!!! NEW HIGH SCORE !!!", 30, 185);
+               }
+            }
+        }
+        textSize(35);
+        fill(0,0,0);
+        text(scoreText, 165, 155);
+
+        if(pokeIndex>0){
+            pokemon[0].m_xpos = 0;
+            pokemon[0].m_ypos = 10;
+            pokemon[0].display();
+        }
+        if(pokeIndex>1){
+            pokemon[1].m_xpos = 60;
+            pokemon[1].m_ypos = 10;
+            pokemon[1].display();
+        }
+        if(pokeIndex>2){
+            pokemon[2].m_xpos = 120;
+            pokemon[2].m_ypos = 10;
+            pokemon[2].display();
+        }
+        if(pokeIndex>3){
+            pokemon[3].m_xpos = 180;
+            pokemon[3].m_ypos = 10;
+            pokemon[3].display();
+        }
+        if(pokeIndex>4){
+            pokemon[4].m_xpos = 240;
+            pokemon[4].m_ypos = 10;
+            pokemon[4].display();
+        }
+        if(pokeIndex>5){
+            pokemon[5].m_xpos = 300;
+            pokemon[5].m_ypos = 10;
+            pokemon[5].display();
+        }
+        popMatrix();
+        counter+=8;
+        break;
     }
 };
 
