@@ -12,6 +12,10 @@ var tileSize=32;
 var cam;
 var pg;
 
+// For fight menu
+var fightMenu = 0;
+var selected = 0;
+
 // Start animation variables
 var gb = loadImage("gameboy.png");
 var gb_x = 185;
@@ -208,6 +212,22 @@ void keyReleased() {
     else if(keyCode===82&&p.runState){
         p.runState=false;
     }
+
+    if(keyCode===87&&gameState===3){
+        if(fightMenu === 1){
+            fightMenu = 0;
+        }
+        println("here");
+    }
+    else if(keyCode===83&&gameState===3){
+        if(fightMenu === 0){
+            fightMenu = 1;
+        }
+        println("here2")
+    }
+    else if(keyCode===ENTER&&gameState===3){
+        selected = 1;
+    }
 };
 void mousePressed(){ isMousePressed=true;};
 void mouseReleased(){ isMousePressed=false;};
@@ -274,11 +294,28 @@ var throw4 = loadImage("throwing4.png");
 var throw5 = loadImage("throwing5.png");
 var ball = loadImage("pokeball.png");
 
+var pokedex = (function() {
+    var json = null;
+    $.ajax({
+        'async': false,
+        'global': false,
+        'url': "/pokedex_trim.json",
+        'dataType': "json",
+        'success': function(data){
+            json = data;
+        }
+    });
+    return json;
+})();
+
+var pokemon = [new monster(1,40,40,1)];
+
+// gameState = 3;
 void draw(){
     switch(gameState){
     case 0: // Gameboy zoom and fade
         if (keys[32]){ // Space
-            gameState = 1;
+            gameState = 2;
         }
         background(94, 114, 242);
         pushMatrix();
@@ -335,6 +372,7 @@ void draw(){
         }
         else if(counter > 1200){
             gameState = 1;
+            counter = 0;
         }
         popMatrix();
         counter++;
@@ -398,7 +436,7 @@ void draw(){
             image(m.drawTile(573,32,32),px*tileSize,py*tileSize);
         }
         p.display();
-        
+        pokemon[0].display();
         if (keys[68]&&!p.isMoving) {//right
             checkCollision(2);
             
@@ -420,10 +458,129 @@ void draw(){
                 prevState=0;
             }
         }
-        
-
         popMatrix();
         break;
+    case 3:
+        // Battle
+        pushMatrix();
+
+        // Black stripe fill
+        fill(0,0,0);
+        noStroke();
+        if(counter <= 13){
+            rect(400 - counter*32, 0, 420, 40);
+        }
+        else if(counter <= 26){
+            rect(0, (counter-26)*32, 40, 420);
+        }
+        else if(counter <= 39){
+            rect((counter-39)*32, 360, 420, 40);
+        }
+        else if(counter <= 52){
+            rect(360, (52-counter)*32, 40, 420);    // First
+        }
+        else if(counter <= 65){
+            rect((65 - counter)*32, 40, 420, 40);
+        }
+        else if(counter <= 78){
+            rect(40, (counter-78)*32, 40, 420);
+        }
+        else if(counter <= 91){
+            rect((counter-91)*32, 320, 420, 40);
+        }
+        else if(counter <= 104){
+            rect(320, (104-counter)*32, 40, 420);    // Second
+        }
+        else if(counter <= 117){
+            rect((117 - counter)*32, 80, 420, 40);
+        }
+        else if(counter <= 130){
+            rect(80, (counter-130)*32, 40, 420);
+        }
+        else if(counter <= 143){
+            rect((counter-143)*32, 280, 420, 40);
+        }
+        else if(counter <= 156){
+            rect(280, (156-counter)*32, 40, 420);    // Third
+        }
+        else if(counter <= 169){
+            rect((169 - counter)*32, 120, 420, 40);
+        }
+        else if(counter <= 182){
+            rect(120, (counter-182)*32, 40, 420);
+        }
+        else if(counter <= 195){
+            rect((counter-195)*32, 240, 420, 40);
+        }
+        else if(counter <= 208){
+            rect(240, (208-counter)*32, 40, 420);    // Fourth
+        }
+        else if(counter <= 221){
+            rect((221 - counter)*32, 160, 420, 40);
+        }
+        else if(counter <= 234){
+            rect(160, (counter-234)*32, 40, 420);
+        }
+        else if(counter <= 247){
+            rect((counter-247)*32, 200, 420, 40);   // Last
+        }
+        // Battle screen
+        else{
+            counter --; // Slow down
+            background(217, 214, 210);
+
+            // Draw player
+            var pImgX = (300 - counter)*7.5;
+            if(pImgX <= 20){
+                pImgX = 20
+            }
+            image(throw1, pImgX, 200, 100, 100);
+
+            // Draw enemy
+            var eImgX = (counter-300)*7.5;
+            if(eImgX >= 300){
+                eImgX = 300
+            }
+            // var enemyImg = pokemon.image  -- something like this?
+            var enemyImg = throw1;  // Place holder for now
+            image(enemyImg, eImgX, 10, 100, 100);
+
+            // Draw text box
+            fill(255,255,255);
+            stroke(0,0,0);
+            rect(1, 300, 398, 99);
+            rect(3, 302, 394, 95);
+
+            // Get moves for text
+            // pokemon.moves
+            fill(0,0,0);
+            textSize(26);
+
+            if(counter <= 380){
+                text("Wild __NAME__\nAppeared!", 10, 330);
+            }
+            else{
+                text("  Catch", 10, 330);
+                text("  Run Away", 10, 370);
+                if(fightMenu === 0){
+                    triangle(10, 314, 10, 329, 20, 321.5);
+                    if(selected){
+                        selected = 0;
+                        // Random chance???
+                    }
+                }
+                else if(fightMenu === 1){
+                    triangle(10, 355, 10, 370, 20, 362.5);
+                    if(selected){
+                        gameState = 2;
+                        selected = 0;
+                    }
+                }
+            }
+        }
+
+        popMatrix();
+        counter+=2;      // Increment frame counter
     }
 };
 
