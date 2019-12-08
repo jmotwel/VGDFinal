@@ -11,18 +11,25 @@ var mapWidth;
 var tileSize=32;
 var cam;
 var pg;
-
+var pokedex;
+var pokemon = [];
 var enemy;
-enemy = found
+var maxEncounter =0;
 
 // For fight menu
 var fightMenu = 0;
 var selected = 0;
 
+var pokeIndex = 0;
+var totalScore = 0;
+var scoreText = 0;
+var highScore = 0;
+
 // Start animation variables
 var gb = loadImage("gameboy.png");
 var gb_x = 185;
 var gbWidth = 30;
+var boost = 1;
 //var p2 = loadImage("character2.png").get(400-32,234-64,32,64);
 
 var barMap=[[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1],
@@ -220,17 +227,46 @@ void keyReleased() {
         if(fightMenu === 1){
             fightMenu = 0;
         }
-        println("here");
+        //println("here");
     }
     else if(keyCode===83&&gameState===3){
         if(fightMenu === 0){
             fightMenu = 1;
         }
-        println("here2")
+        //println("here2")
     }
     else if(keyCode===ENTER&&gameState===3){
         selected = 1;
     }
+    else if(keyCode === 57){    // Shiny catch
+        boost=8192;
+        gameState=2;
+    }
+    else if(keyCode === 56){    // One more catch
+        totalScore=0;
+        pokemon = [];
+        scoreText=0;
+        pokeIndex=0;
+        pokemon.push(new monster(1,29,29,1,59,59));
+        pokemon.push(new monster(2,29,29,1,59,59));
+        pokemon.push(new monster(3,29,29,1,59,59));
+        pokemon.push(new monster(4,29,29,1,59,59));
+        pokemon.push(new monster(5,29,29,1,59,59));
+        counter = 0;
+        gameState=2;
+    }
+    else if(keyCode === 55){    // Restart game
+        totalScore=0;
+        pokemon = [];
+        counter=0;
+        scoreText=0;
+        pokeIndex=0;
+        pokemon = [];
+        gb_x = 185;
+        gbWidth = 30;
+        gameState=0;
+    }
+    
 };
 void mousePressed(){ isMousePressed=true;};
 void mouseReleased(){ isMousePressed=false;};
@@ -271,6 +307,16 @@ void checkCollision(dir){
     }
 };
 
+int calcRandomPokemon(){
+    var temp = (int)random(1,maxEncounter);
+    for (var i=0; i<pokedex.length;i++){
+        temp-=pokedex[i].crate;
+        if(temp<=0){
+            return i;
+        }
+    }
+    return 1;
+};
 
 
 void setup(){
@@ -280,6 +326,23 @@ void setup(){
     p=new player(3*tileSize,3*tileSize);
     for( var i = 1; i<=31; i++){
         pokeArr.push(loadImage("./pokemon/"+i+".png"))
+    }
+    pokedex = (function() {
+        var json = null;
+        $.ajax({
+            'async': false,
+            'global': false,
+            'url': "/pokedex_trim.json",
+            'dataType': "json",
+            'success': function(data){
+                json = data;
+            }
+        });
+        return json;
+    })();
+
+    for(var i = 0; i< pokedex.length;i++){
+        maxEncounter += pokedex[i].crate;
     }
 };
 
@@ -297,34 +360,125 @@ var throw4 = loadImage("throwing4.png");
 var throw5 = loadImage("throwing5.png");
 var ball = loadImage("pokeball.png");
 
-var pokedex = (function() {
-    var json = null;
-    $.ajax({
-        'async': false,
-        'global': false,
-        'url': "/pokedex_trim.json",
-        'dataType': "json",
-        'success': function(data){
-            json = data;
-        }
-    });
-    return json;
-})();
+var explosionObj = function(a) {
+    this.position = new PVector(0, 0);
+    this.direction = new PVector(0, 0);
+    this.size = random(1, 3);
+    if (a === 0) {
+        this.c1 = random(0, 250);
+    }
+    else {
+        this.c1 = random(100, 255);
+    }
+    if (a === 1) {
+        this.c2 = random(0, 250);
+    }
+    else {
+        this.c2 = random(100, 255);
+    }
+    if (a === 3) {
+        this.c3 = random(0, 250);
+    }
+    else {
+        this.c3 = random(100, 255);
+    }
+    this.timer = 0;
+};    
 
-var pokemon = [new monster(1,40,40,1)];
+///// EXPERIMENT number of particles ////
+var fireworkObj = function(a) {
+    this.position = new PVector(200, 380);
+    this.direction = new PVector(0, 0);
+    this.target = new PVector(mouseX, mouseY);
+    this.step = 0;
+    this.explosions = [];
+    for (var i = 0; i < 200; i++) {
+        this.explosions.push(new explosionObj(a));   
+    }    
+};    
+
+var firework = [new fireworkObj(0), new fireworkObj(1), new fireworkObj(2), new fireworkObj(0)];
+
+//// EXPERIMENT direction of explosion /////
+fireworkObj.prototype.draw = function() {
+    fill(255, 255, 255);
+    noStroke();
+    ellipse(this.position.x, this.position.y, 2, 2);
+    
+    this.position.add(this.direction);
+    if (dist(this.position.x, this.position.y, this.target.x, this.target.y) < 4) {
+        this.step = 2;
+        for (var i = 0; i < this.explosions.length; i++) {
+            this.explosions[i].position.set(this.target.x, this.target.y);
+            
+            this.explosions[i].direction.set(random(0, 360), random(-0.3, 0.3));
+/*	    this.explosions[i].direction.set(random(-0.3, 0.3), 
+		random(-0.3, 0.3)); // cartesian (instead of polar) direction */
+            this.explosions[i].timer = 180;
+        }
+    }    
+};
+
+//// EXPERIMENT direction of explosion /////
+explosionObj.prototype.draw = function() {
+    fill(this.c1, this.c2, this.c3, this.timer);	// 4th value fader
+    noStroke();
+    ellipse(this.position.x, this.position.y, this.size, this.size);
+    
+    this.position.x += this.direction.y*cos(this.direction.x);
+    this.position.y += this.direction.y*sin(this.direction.x);
+/*  this.position.add(this.direction); // random cartesian direction */
+    this.position.y += (90/(this.timer + 100));    //gravity
+    this.timer--;
+};
+
+
+void drawFireWorks(){
+    //background(0, 0, 0);
+
+    for (var j = 0; j < firework.length; j++) {
+        if (firework[j].step === 0) {
+            firework[j].position.set(200, 450);
+            firework[j].target.set(random(100, 300), random(50, 120));
+            firework[j].direction.set(firework[j].target.x - firework[j].position.x, firework[j].target.y - firework[j].position.y);
+            var s = random(1, 2) / 100;
+            firework[j].direction.mult(s);
+            firework[j].step++;
+        } 
+        else if (firework[j].step === 1) {
+            firework[j].draw();
+        } 
+        else if (firework[j].step === 2) {
+            for (var i = 0; i < firework[j].explosions.length; i++) {
+                firework[j].explosions[i].draw();   
+            } 
+            if (firework[j].explosions[0].timer <= 0) {
+                firework[j].step = 0;   
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
 
 // gameState = 3;
 void draw(){
+    if (keys[32]){ // Space
+            gameState = 1;
+    }
     switch(gameState){
     case 0: // Gameboy zoom and fade
         if (keys[32]){ // Space
-            gameState = 2;
+            gameState = 1;
         }
         background(94, 114, 242);
         pushMatrix();
-        if(isMousePressed&&gameState===0){
-            gameState=1;
-        }
+
         if (counter <= 36){gbWidth+=10;}
         else{
             background(165, 166, 158);
@@ -422,6 +576,9 @@ void draw(){
             text("Use the mouse to select buttons in menu",30,90);
             text("Use WSAD to move the player",30,110);
             text("Press R to toggle run mode",30,130);
+            text("Use W and S to control menu and enter to select",30,150);
+            text("Catch 6 Pokemon to finish the game",30,170);
+            text("Run away to find higher scoring pokemon",30,190);
             buttons[buttons.length-1].display();
             buttons[buttons.length-1].update();
         }
@@ -439,19 +596,54 @@ void draw(){
             image(m.drawTile(573,32,32),px*tileSize,py*tileSize);
         }
         p.display();
-        pokemon[0].display();
+        
         if (keys[68]&&!p.isMoving) {//right
+            var r = random(1,10);
+            if((((int)r)===1) && (px>=26 && px <=29 && py>=5 && py<=8)){
+                gameState=3;
+                counter = 0;
+                int i = calcRandomPokemon();
+
+                enemy = new monster(i,50,50,boost,50,50);
+                break;
+            }
             checkCollision(2);
-            
         }
         else if (keys[65]&&!p.isMoving) {//left
+            var r = random(1,10);
+            if((((int)r)===1) && (px>=26 && px <=29 && py>=5 && py<=8)){
+                gameState=3;
+                counter = 0;
+                int i = calcRandomPokemon();
+
+                enemy = new monster(i,50,50,boost,50,50);
+                break;
+            }
             checkCollision(1);
+            
         }
         else if (keys[87]&&!p.isMoving) {//up
+            var r = random(1,10);
+            if((((int)r)===1) && (px>=26 && px <=29 && py>=5 && py<=8)){
+                gameState=3;
+                counter = 0;
+                int i = calcRandomPokemon();
+                enemy = new monster(i,50,50,boost,50,50);
+                break;
+            }
             checkCollision(3)
+            
         
         }
         else if (keys[83]&&!p.isMoving) {//down
+            var r = random(1,10);
+            if((((int)r)===1) && (px>=26 && px <=29 && py>=5 && py<=8)){
+                gameState=3;
+                counter =0;
+                int i = calcRandomPokemon();
+                enemy = new monster(i,50,50,boost,50,50);
+                break;
+            }
             checkCollision(0);
 
         }
@@ -542,10 +734,19 @@ void draw(){
             // Draw enemy
             var eImgX = (counter-300)*7.5;
             if(eImgX >= 300){
-                eImgX = 300
+                eImgX = 300;
+                fill(255,255,255);
+                stroke(0,0,0);
+                rect(6, 10, 230, 75);
+                rect(9, 12, 226, 71);
+                fill(0,0,0);
+                textSize(26);
+                text(enemy.myName, 20, 40);
+                text("Score: "+ enemy.calcScore(), 60, 70);
+
             }
             // var enemyImg = pokemon.image  -- something like this?
-            var enemyImg = throw1;  // Place holder for now
+            var enemyImg = enemy.myImage;  // Place holder for now
             image(enemyImg, eImgX, 10, 100, 100);
 
             // Draw text box
@@ -560,7 +761,7 @@ void draw(){
             textSize(26);
 
             if(counter <= 380){
-                text("Wild __NAME__\nAppeared!", 10, 330);
+                text("Wild "+ enemy.myName+"\nAppeared!", 10, 330);
             }
             else{
                 text("  Catch", 10, 330);
@@ -569,6 +770,12 @@ void draw(){
                     triangle(10, 314, 10, 329, 20, 321.5);
                     if(selected){
                         selected = 0;
+                        counter=0;
+                        gameState=2;
+                        pokemon.push(enemy);
+                        if(pokemon.length > 5 ){
+                            gameState = 4;
+                        }
                         // Random chance???
                     }
                 }
@@ -577,6 +784,7 @@ void draw(){
                     if(selected){
                         gameState = 2;
                         selected = 0;
+                        counter=0;
                     }
                 }
             }
@@ -584,6 +792,116 @@ void draw(){
 
         popMatrix();
         counter+=2;      // Increment frame counter
+        break;
+    case 4:
+        pushMatrix();
+        background(217, 214, 210);
+
+        if(counter <= 160){
+            image(throw1, 10, 300, 100, 100);
+        }
+        else if(counter <= 180){
+            image(throw2, 10, 300, 100, 100);
+        }
+        else if(counter <= 200){
+            image(throw3, 10, 300, 100, 100);
+        }
+        else if(counter <= 220){
+            image(ball, 160+counter-366, 215-counter+366, 20, 20);
+            image(throw4, 10, 300, 100, 100);
+        }
+        else if(counter <= 400){
+            image(ball, 160+counter-366, 215-counter+366, 20, 20);
+            image(throw5, 10, 300, 100, 100);
+        }
+        else if(counter<=1000){
+            image(throw1, 10, 300, 100, 100);
+            pokemon[pokeIndex].m_xpos = 150;
+            pokemon[pokeIndex].m_ypos = 150;
+            pokemon[pokeIndex].display();
+
+            // Draw text box
+            if(pokeIndex === 0){
+                totalScore = pokemon[pokeIndex].calcScore();
+            }
+
+            fill(255,255,255);
+            stroke(0,0,0);
+            rect(150, 300, 248, 99);
+            rect(152, 302, 244, 95);
+            fill(0,0,0);
+            textSize(26);
+            text(pokemon[pokeIndex].myName, 155, 335);
+            textSize(18);
+            text("Catch Rate: " + pokemon[pokeIndex].myCRate, 155, 355);
+            text("Score: " + pokemon[pokeIndex].calcScore(), 155, 375);
+            scoreText = totalScore;
+        }
+        else{
+            if(pokeIndex < 5){
+                if(pokeIndex < 5){counter = 0;}
+                pokeIndex++;
+                totalScore += pokemon[pokeIndex].calcScore();
+            }
+            else{
+               image(throw1, 10, 300, 100, 100); 
+               if(totalScore >= highScore){
+                    highScore = totalScore;
+                    textSize(30);
+                    fill(255,0,0);
+                    text("!!! NEW HIGH SCORE !!!", 30, 185);
+                    drawFireWorks();
+               }
+                pokemon[5].m_xpos = 300;
+                pokemon[5].m_ypos = 10;
+                pokemon[5].display();
+                if (keys[32]){ // Space
+                    gameState = 1;
+                    totalScore=0;
+                    pokemon = [];
+                    counter=0;
+                    pokeIndex=0;
+                    scoreText=0;
+                }
+                textSize(20);
+                fill(255);
+                text("Press space to restart", 100, 210);
+            }
+        }
+        textSize(35);
+        fill(0,0,0);
+        text(scoreText, 165, 140);
+
+        if(pokeIndex>0){
+            pokemon[0].m_xpos = 0;
+            pokemon[0].m_ypos = 10;
+            pokemon[0].display();
+        }
+        if(pokeIndex>1){
+            pokemon[1].m_xpos = 60;
+            pokemon[1].m_ypos = 10;
+            pokemon[1].display();
+        }
+        if(pokeIndex>2){
+            pokemon[2].m_xpos = 120;
+            pokemon[2].m_ypos = 10;
+            pokemon[2].display();
+        }
+        if(pokeIndex>3){
+            pokemon[3].m_xpos = 180;
+            pokemon[3].m_ypos = 10;
+            pokemon[3].display();
+        }
+        if(pokeIndex>4){
+            pokemon[4].m_xpos = 240;
+            pokemon[4].m_ypos = 10;
+            pokemon[4].display();
+        }
+
+        popMatrix();
+        counter+=8;
+        break;
     }
+    
 };
 

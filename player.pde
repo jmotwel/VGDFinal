@@ -19,7 +19,6 @@ class player{
         canMove=true;
         runState=false;
         notMoving=true;
-        curFrame
         state=1;
         prevState=0;
 
