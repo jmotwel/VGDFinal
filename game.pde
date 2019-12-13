@@ -172,7 +172,11 @@ buttonObj.prototype.update = function(){
                 menuState=0;
             }
             else if(isMousePressed&&this.t==="Start Game"){
-                menuState=0;
+                totalScore=0;
+                pokemon = [];
+                counter=0;
+                pokeIndex=0;
+                scoreText=0;
                 gameState=2;
             }
     }
